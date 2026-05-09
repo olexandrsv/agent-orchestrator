@@ -1,14 +1,49 @@
 .agent{
     position: absolute;
     top: 200px;
-    left: 300px;
+    left: 100px;
     width: 40px;
     height: 40px;
+    margin-left: -22px;
+    margin-top: -22px;
     background-color: rgba(228, 40, 33, 0.3);
-    border-radius: 100%;
+    /* border-radius: 100%; */
     border: 4px solid;
     border-color: rgba(228, 40, 33, 1);
     cursor: pointer;
+}
+
+.arrow{
+    position: absolute;
+    top: var(--top);
+    left: var(--left);
+    max-width: 24px;
+    max-height: 24px;
+    height: fit-content;
+    width: fit-content;
+    margin-left: -10px;
+    margin-top: -10px;
+    transform: rotate(var(--angle));
+    z-index: 0;
+}
+
+.triangle {
+    width: 0;
+    height: 0;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-left: 24px solid rgb(135, 135, 135);
+}
+
+.triangle-shadow {
+    top: 0px;
+    left: 0px;
+    width: 0;
+    height: 0;
+    margin-top: -24px;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-left: 6px solid white;
 }
 
 .position{
@@ -19,10 +54,11 @@
 
 .connection{
     position: absolute;
-    top: var(--y);
-    left: var(--x);
+    top: var(--top);
+    left: var(--left);
     width: var(--len);
-    height: 4px;
-    background: rgb(135, 135, 135);
+    border: 2px solid rgb(135, 135, 135);
+    background-color: rgb(135, 135, 135);
     transform: rotate(var(--angle));
+    z-index: 1;
 }
