@@ -1,0 +1,10 @@
+.connection{
+    position: absolute;
+    top: var(--top);
+    left: var(--left);
+    width: var(--len);
+    border: 2px solid rgb(135, 135, 135);
+    background-color: rgb(135, 135, 135);
+    transform: rotate(var(--angle));
+    z-index: 3;
+}

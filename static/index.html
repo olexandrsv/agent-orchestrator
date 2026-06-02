@@ -3,16 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <title>Bertie</title>
+    <link rel="stylesheet" href="tabs.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>    
-    <div class="agent">
-        <div class="connection"></div>
-    </div>
-    <div class="agent position"></div>
+    <div id="agents"></div>
+    <!-- <div class="agent position"></div> -->
+    <!-- <my-agent top="100" left="100"></my-agent> -->
+    <!-- <my-agent top="200" left="200"></my-agent>  -->
+    <!-- <arrow-ui top="100" left="100" angle="-135"></arrow-ui> -->
+    <!-- <line-ui top1="100" left1="100" top2="200" left2="200"></line-ui> -->
+   
+    <!-- <connection-ui top1="100" left1="100" top2="300" left2="150"></connection-ui> -->
 
     <div id="connections"></div>
+    <div class="entity-state">
+        <div class="state-header">
+            <button class="close-btn" onclick="closeState()" aria-label="Close"></button>
+        </div>
+        <div class="tabs">
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="Info">Info</button>
+                <button class="tab-btn" data-tab="Logs">Logs</button>
+            </div>
+
+            <div class="tab-content active" id="info">
+                <h2>Home</h2>
+                <p>Welcome to home tab.</p>
+            </div>
+
+            <div class="tab-content" id="logs">
+                <h2>Profile</h2>
+                <p>This is profile section.</p>
+            </div>
+
+        </div>
+    </div>
     
-    <script src="script.js"></script>
+    <script src="connection.js"></script>
+    <script type="module" src="script.js"></script>
+    <script type="module" src="core/controller.js"></script>
+    <script type="module" src="core/agent.js"></script>
+    <script type="module" src="core/connection.js"></script>
+    <script type="module" src="core/model.js"></script>
+    <script type="module" src="core/presentation.js"></script>
+    <script type="module" src="core/team.js"></script>
+    <script src="modules.js"></script>
 </body>
 </html>

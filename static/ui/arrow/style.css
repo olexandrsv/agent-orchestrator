@@ -1,0 +1,31 @@
+.arrow{
+    position: absolute;
+    top: var(--top);
+    left: var(--left);
+    max-width: 24px;
+    max-height: 24px;
+    height: fit-content;
+    width: fit-content;
+    margin-left: -10px;
+    margin-top: -10px;
+    transform: rotate(var(--angle));
+    z-index: 0;
+}
+
+.triangle {
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-left: 24px solid rgb(135, 135, 135);
+    background-color: white;
+}
+
+.triangle-shadow {
+    top: 0px;
+    left: 0px;
+    width: 0;
+    height: 0;
+    margin-top: -24px;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-left: 6px solid white;
+}

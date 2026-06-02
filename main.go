@@ -6,12 +6,27 @@ import (
 	"agent-orchestrator/infrastructure/agents"
 	"agent-orchestrator/infrastructure/strategies"
 	"fmt"
+	"net/http"
 	"time"
 )
 
 func main() {
-	test2()
+	web()
+	//test2()
 	//testTest()
+}
+
+func web() {
+	fs := http.FileServer(http.Dir("./../open/static/"))
+
+	http.Handle("/", fs)
+
+	fmt.Println("Server running at http://localhost:8080")
+
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func test2() {

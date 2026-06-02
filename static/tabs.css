@@ -1,0 +1,55 @@
+.tabs {
+    width: 94%;
+    margin-left: 3%;
+    margin-right: 3%;
+    height: 90%;
+}
+
+/* Tab buttons */
+.tab-buttons {
+    width: fit-content;
+    display: flex;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+.tab-btn {
+  flex: 1;
+  width: 150px;
+  padding: 10px;
+  cursor: pointer;
+  border: none;
+  border-left: 2px solid #ddd;
+  border-right: 2px solid #ddd;
+  border-top: 3px solid #ddd;
+  background: none;
+  font-size: 16px;
+  transition: 0.3s;
+  color: white;
+  font-weight: bold;
+}
+
+.tab-btn:hover {
+  background: white;
+  color: navy;
+}
+
+.tab-btn.active {
+  color: navy;
+  background: white;
+}
+
+/* Tab content */
+.tab-content {
+    display: none;
+    padding: 20px;
+    background: white;
+    border-top: none;
+}
+
+.tab-content.active {
+    display: block;
+    height: 90%;
+    border: 3px solid #ddd;
+    border-top: 3px solid #ddd;
+}
