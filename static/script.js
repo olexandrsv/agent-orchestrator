@@ -1,161 +1,109 @@
 import { Controller } from "./core/controller.js"
 import { Connector } from "./ui/connection/script.js"
 import { Connection } from "./ui/connection/script.js"
+import { computeLine, shiftLine } from "/utils/line/line.js"
+import { AgentUI } from "/agent/script.js"
 
-let system = {
-    Agents: [
-        {
-            ID: 1,
-            Name: "bob",
-            Model: {
-                ID: 1,
-                Name: "model1",
-                Thinking: 20,
-                Coding: 10,
-            },
-            Conns: [2, 3],
-            Presentation: {
-                Left: 40,
-                Top: 40,
-                Color: "red",
-            }
-        },
-        {
-            ID: 2,
-            Name: "ben",
-            Model: {
-                ID: 1,
-                Name: "model1",
-                Thinking: 20,
-                Coding: 10,
-            },
-            Conns: [1],
-            Presentation: {
-                Left: 180,
-                Top: 180,
-                Color: "red",
-            }
-        },
-        {
-            ID: 3,
-            Name: "bill",
-            Model: {
-                ID: 1,
-                Name: "model1",
-                Thinking: 20,
-                Coding: 10,
-            },
-            Conns: [2],
-            Presentation: {
-                Left: 100,
-                Top: 300,
-                Color: "red",
-            }
-        },
-    ]
-}
-
+let controller
 main()
 
-function main(){
-    const controller = new Controller()
-    controller.getTeam()
-}
-
-
-showSystem(system)
-
-function showSystem(system){
-    const agentMap = new Map()
-    for (const agent of system.Agents){
-        new Agent(agent.Presentation.Left, agent.Presentation.Top, agent.Presentation.Color)
-        agentMap.set(agent.ID, agent)
+async function main(){
+    controller = new Controller()
+    const team = await controller.getTeam()
+    for (const agent of team.agents){
+        drawAgent(agent)
     }
-
-    const connector = new Connector()
-    for (const [id, agent] of agentMap){
-        for (const neighborId of agent.Conns){
-            const neighborAgent = agentMap.get(neighborId)
-            const connection = new Connection(agent.Presentation.Left, agent.Presentation.Top,
-                neighborAgent.Presentation.Left, neighborAgent.Presentation.Top)
-            connector.addConnection(connection)
-        }
+    for (const conn of team.connections){
+        drawConnection(conn)
     }
-    connector.show()
 }
 
-function placeArrow(left1, top1, left2, top2){
-    placeArrowWithShift(left1, top1, left2, top2, 37, 25)
+function drawAgent(agent){
+    new AgentUI(agent.presentation.left, agent.presentation.top, 
+        agent.presentation.color, () => changeAgent(agent))
 }
 
-function placeBidirectionArrow(left1, top1, left2, top2){
-    placeArrowWithShift(left1, top1, left2, top2, 37, 35)
-    placeArrowWithShift(left2, top2, left1, top1, 37, 35)
+function onClick(){
+    console.log("on agent click")
 }
 
-function placeArrowWithShift(left1, top1, left2, top2, arrowShift, lineShift){
-    let [left, top, len, angle] = computeShape(left1, top1, left2, top2)
-    const [arrowLeftShift, arrowTopShift] = computeShift(arrowShift, angle)
-    const [lineLeftShift, lineTopShift] = computeShift(lineShift, angle)
+let currentAgent
 
-    const shiftedLeft1 = left1 + lineLeftShift
-    const shiftedTop1 = top1 + lineTopShift
-    const shiftedLeft2 = left2 - lineLeftShift*1.5
-    const shiftedTop2 = top2 - lineTopShift*1.5
+function changeAgent(agent){
+    currentAgent = agent
+    openWindow()
+}
 
-    let [newLeft, newTop, newLen, newAngle] = computeShape(shiftedLeft1, shiftedTop1, 
-        shiftedLeft2, shiftedTop2)
-    const [lineLeft, lineTop] = computeLine(shiftedLeft1, shiftedTop1, newLeft, 
-        newTop, newLen, newAngle)
+function openWindow(){
+    openInfoTab()
+    document.getElementsByClassName("entity-state")[0].classList.add("active")
+}
+
+document.getElementById("closeWindow").onclick = () => {
+    openInfoTab()
+    closeLogsTab()
+    document.getElementsByClassName("entity-state")[0].classList.remove("active")
+}
+
+function openInfoTab(){
+    document.getElementById("infoTab").classList.add("active")
+    document.getElementById("info").classList.add("active")
     
-    drawLine(lineLeft, lineTop, newLen, newAngle)
-    drawArrow(left2 - arrowLeftShift, top2 - arrowTopShift, angle)
+    let agentJson = JSON.stringify(currentAgent, null, 2)
+    document.getElementById("info").textContent = agentJson
 }
 
-function computeShift(shift, angle){
-    const angleRad = angle * Math.PI / 180;
-    const leftShift = shift * Math.cos(angleRad);
-    const topShift = shift * Math.sin(angleRad);
-    return [leftShift, topShift]
+function closeInfoTab(){
+    document.getElementById("infoTab").classList.remove("active")
+    document.getElementById("info").classList.remove("active")
 }
 
-function computeShape(left1, top1, left2, top2){
-    let left = left2 - left1
-    let top = top2 - top1
-    let hypotenuse = Math.sqrt(Math.pow(left, 2) + Math.pow(top, 2))
+function openLogsTab(){
+    document.getElementById("logsTab").classList.add("active")
+    document.getElementById("logs").classList.add("active")
+}
 
-    let radians = Math.acos(left/hypotenuse);
-    let degrees = radians * (180 / Math.PI);
-    if (top < 0) {
-        degrees = -degrees
+function closeLogsTab(){
+    document.getElementById("logsTab").classList.remove("active")
+    document.getElementById("logs").classList.remove("active")
+}
+
+document.getElementById("infoTab").onclick = () => {
+   openInfoTab()
+   closeLogsTab()
+}
+
+document.getElementById("logsTab").onclick = () => {
+    closeInfoTab()
+    openLogsTab()
+
+    controller.getAgentLogs(currentAgent.id).then(data => {
+        let text = ""
+        for (const d of data.logs){
+            text += "type: "+d.Type+"\n"
+            text += "message: "+d.Text+"\n\n\n\n"
+        }
+        document.getElementById("logs").textContent = text
+    })
+}
+
+document.getElementById("request").addEventListener("keydown", function(event) {
+    if (event.key === "Enter" && !event.shiftKey) {
+        let req = document.getElementById("request")
+        let request = req.value
+        req.value = ""
+        controller.sendRequest(request)
     }
-    return [left, top, hypotenuse, degrees]
-}
+})
 
+function drawConnection(connection){
+    let div = document.getElementById("connections")
+    const top1 = Number(connection.from.presentation.top)
+    const left1 = Number(connection.from.presentation.left)
+    const top2 = Number(connection.to.presentation.top)
+    const left2 = Number(connection.to.presentation.left)
 
-function computeLine(left1, top1, left, top, hypotenuse, degrees){
-    top1 = top1 + top/2
-    left1 = left1 - (hypotenuse - left)/2
-    return [left1, top1]
-}
-
-function drawArrow(left, top, angle){
-    const arrow = `<div class="arrow" style="--left:${left}px; --top:${top}px; --angle:${angle}deg;">
-        <div class="triangle"></div>
-        <div class="triangle-shadow"></div>
-    </div>`
-    let body = document.getElementById("connections")
-    body.innerHTML = body.innerHTML + arrow
-}
-
-function drawLine(left, top, len, degrees){
-    const line = `<div class="connection" style="--top:${top}px; --left:${left}px; --len:${len}px; --angle:${degrees}deg;"></div>`
-    let body = document.getElementById("connections")
-    body.innerHTML = body.innerHTML + line
-}
-
-function drawAgent(left, top){
-    const html = `<div class="agent" style="--top:${top}px; --left:${left}px;"></div>`
-    let body = document.getElementById("agents")
-    body.innerHTML = body.innerHTML + html
+    const [left, top, hypotenuse, degrees] = computeLine(left1, top1, left2, top2)
+    const [newLeft1, newTop1, newLeft2, newTop2] = shiftLine(left1, top1, left2, top2, 25, degrees)
+    div.innerHTML += `<connection-ui top1="${newTop1}" left1="${newLeft1}" top2="${newTop2}" left2="${newLeft2}"></connection-ui>`
 }

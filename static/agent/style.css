@@ -1,13 +1,15 @@
-my-agent{
+.agent-ui{
     position: absolute;
     width: 40px;
     height: 40px;
+    left: var(--left);
+    top: var(--top);
     margin-left: -22px;
     margin-top: -22px;
-    background-color: rgba(228, 40, 33, 0.3);
+    background-color: rgba(var(--color), 0.3);
     border-radius: 100%;
     border: 4px solid;
-    border-color: rgba(228, 40, 33, 1);
+    border-color: rgba(var(--color), 1);
     cursor: pointer;
     z-index: 2;
 }

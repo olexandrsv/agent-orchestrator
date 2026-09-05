@@ -3,7 +3,6 @@ package strategy
 import (
 	"agent-orchestrator/core/id"
 	"agent-orchestrator/core/message"
-	"fmt"
 )
 
 type Strategy[M message.Message] struct {
@@ -33,13 +32,11 @@ func (s *Strategy[M]) SessionCallback(sessionId string) func(M) {
 func (s *Strategy[M]) NewSession(callback func(M)) string {
 	session := NewSession(callback)
 	s.sessions[session.id] = session
-	fmt.Println("new session:", session.id)
 	return session.id
 }
 
 func (s *Strategy[M]) Aggregate(sessionId, topic string, msg M) ([]M, bool) {
 	session, ok := s.sessions[sessionId]
-	fmt.Println("sessionId:", sessionId, "session:", session, "ok: ", ok)
 	if !ok {
 		return nil, false
 	}

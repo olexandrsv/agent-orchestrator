@@ -1,8 +1,6 @@
 package model
 
 type Model interface {
-	StartSession() error
-	EndSession() error
 	Say(string) (string, error)
 	Info() ModelInfo
 }

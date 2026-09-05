@@ -12,9 +12,9 @@ type agentV2[ML model.Model, M message.Message] struct {
 
 func NewAgentV2[
 	ML model.Model, M message.Message,
-](id string, model ML) strategies.AgentV2[ML, M] {
+](id, name string, model ML) strategies.AgentV2[ML, M] {
 	agent := &agentV2[ML, M]{
-		AgentV1: NewAgentV1[ML, M](id, model),
+		AgentV1: NewAgentV1[ML, M](id, name, model),
 	}
 	return agent
 }

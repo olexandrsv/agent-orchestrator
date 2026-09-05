@@ -16,7 +16,7 @@
 .tab-btn {
   flex: 1;
   width: 150px;
-  padding: 10px;
+  height: 40px;
   cursor: pointer;
   border: none;
   border-left: 2px solid #ddd;
@@ -48,8 +48,9 @@
 }
 
 .tab-content.active {
+  position: relative;
+    top: -15px;
     display: block;
     height: 90%;
     border: 3px solid #ddd;
-    border-top: 3px solid #ddd;
 }

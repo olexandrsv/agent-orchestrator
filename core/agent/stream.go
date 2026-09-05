@@ -42,7 +42,7 @@ func (s *stream[A, ML]) GetById(id string) A {
 
 func (s *stream[A, ML]) TheSmartest() A {
 	return s.Pick(func(item1, item2 A) int {
-		if item1.Info().ModelInfo.Thinking > item2.Info().ModelInfo.Thinking {
+		if item1.Model().Info().Thinking > item2.Model().Info().Thinking {
 			return 1
 		}
 		return -1
@@ -51,7 +51,7 @@ func (s *stream[A, ML]) TheSmartest() A {
 
 func (s *stream[A, ML]) BestCoder() A {
 	return s.Pick(func(item1, item2 A) int {
-		if item1.Info().ModelInfo.Coding > item2.Info().ModelInfo.Coding {
+		if item1.Model().Info().Coding > item2.Model().Info().Coding {
 			return 1
 		}
 		return -1
@@ -65,7 +65,7 @@ func (s *stream[A, ML]) Pick(comparator func(item1, item2 A) int) A {
 	}
 	choosen := s.items[0]
 	for i := 1; i < len(s.items); i++ {
-		if comparator(choosen, s.items[i]) == 1 {
+		if comparator(s.items[i], choosen) == 1 {
 			choosen = s.items[i]
 		}
 	}

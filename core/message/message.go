@@ -2,6 +2,7 @@ package message
 
 import (
 	"fmt"
+	"maps"
 	"sync"
 )
 
@@ -13,7 +14,7 @@ type Message interface {
 	AddTopic(string, int)
 	Kind() string
 	Text() string
-	Change(string, string)
+	Change(string, string) Message
 }
 
 type message struct {
@@ -93,9 +94,18 @@ func (m *message) String() string {
 		m.SenderId(), m.topics, m.Kind(), m.Text())
 }
 
-func (m *message) Change(senderId, text string) {
-	m.mx.Lock()
-	defer m.mx.Unlock()
-	m.senderId = senderId
-	m.text = text
+func (m *message) Change(senderId, text string) Message {
+	newMsg := &message{
+		sessionsIds: make(map[string]string),
+		senderId:    senderId,
+		text:        text,
+	}
+	maps.Copy(newMsg.sessionsIds, m.sessionsIds)
+	for _, topic := range m.topics {
+		newMsg.topics = append(newMsg.topics, Topic{
+			name:             topic.name,
+			expectedMessages: topic.expectedMessages,
+		})
+	}
+	return newMsg
 }

@@ -9,63 +9,22 @@ export class Controller{
 
     }
 
-    getTeam(){
-        let system = {
-            Agents: [
-                {
-                    ID: 1,
-                    Name: "bob",
-                    Model: {
-                        ID: 1,
-                        Name: "model1",
-                        Thinking: 20,
-                        Coding: 10,
-                    },
-                    Conns: [2, 3],
-                    Presentation: {
-                        Left: 40,
-                        Top: 40,
-                        Color: "red",
-                    }
-                },
-                {
-                    ID: 2,
-                    Name: "ben",
-                    Model: {
-                        ID: 1,
-                        Name: "model1",
-                        Thinking: 20,
-                        Coding: 10,
-                    },
-                    Conns: [1],
-                    Presentation: {
-                        Left: 180,
-                        Top: 180,
-                        Color: "red",
-                    }
-                },
-                {
-                    ID: 3,
-                    Name: "bill",
-                    Model: {
-                        ID: 1,
-                        Name: "model1",
-                        Thinking: 20,
-                        Coding: 10,
-                    },
-                    Conns: [2],
-                    Presentation: {
-                        Left: 100,
-                        Top: 300,
-                        Color: "red",
-                    }
-                },
-            ]
-        }
+    async sendRequest(text){
+        fetch('http://localhost:8080/agents/execute?request='+text);
+    }
 
+    async getAgentLogs(agentId){
+        const response = await fetch('http://localhost:8080/logs?agentId='+agentId);
+        const data = await response.json();
+        return data
+    }
+
+    async getTeam(){
+        const response = await fetch('http://localhost:8080/team');
+        const data = await response.json();
         const agents = []
         const agentMap = new Map()
-        for (const agentModel of system.Agents){
+        for (const agentModel of data.Agents){
             const presentation = new Presentation(agentModel.Presentation.Left, 
                 agentModel.Presentation.Top, agentModel.Presentation.Color)
             const model = new Model(agentModel.Model.ID, agentModel.Model.Name,
@@ -77,7 +36,10 @@ export class Controller{
         console.log(agents)
 
         const connections = []
-        for (const fromAgent of system.Agents){
+        for (const fromAgent of data.Agents){
+            if (fromAgent.Conns === null){
+                continue
+            }
             for (const toAgentId of fromAgent.Conns){
                 const connection = new Connection(agentMap.get(fromAgent.ID), agentMap.get(toAgentId))
                 connections.push(connection)
@@ -85,9 +47,5 @@ export class Controller{
         }
         console.log(connections)
         return new Team(agents, connections)
-    }
-
-    getAgentLogs(agentId){
-        
     }
 }

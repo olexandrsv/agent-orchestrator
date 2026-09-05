@@ -29,17 +29,18 @@ func NewAskModelStrategy[
 }
 
 func (s *AskModelStrategy[A, ML, M]) AskModel(msg M, callback func(M)) {
-	fmt.Println(s.agent.Info().ID, msg)
+	s.agent.Log("request", msg.Text())
 	resp, err := s.askModel(msg)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	msg.Change(s.agent.Info().ID, resp)
-	callback(msg)
+	newMsg := msg.Change(s.agent.Info().ID, resp)
+	s.agent.Log("response", resp)
+	callback(newMsg.(M))
 }
 
 func (s *AskModelStrategy[A, Model, M]) askModel(msg M) (string, error) {
-	text := "solve this problem " + msg.Text()
+	text := msg.Text()
 	return s.agent.Model().Say(text)
 }

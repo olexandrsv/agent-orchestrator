@@ -2,45 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Bertie</title>
+    <title>agent-orchestrator</title>
     <link rel="stylesheet" href="tabs.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="ui/arrow/style.css">
+    <link rel="stylesheet" href="ui/connection/style.css">
+    <link rel="stylesheet" href="ui/line/style.css">
+    <link rel="stylesheet" href="agent/style.css">
 </head>
 <body>    
     <div id="agents"></div>
-    <!-- <div class="agent position"></div> -->
-    <!-- <my-agent top="100" left="100"></my-agent> -->
-    <!-- <my-agent top="200" left="200"></my-agent>  -->
-    <!-- <arrow-ui top="100" left="100" angle="-135"></arrow-ui> -->
-    <!-- <line-ui top1="100" left1="100" top2="200" left2="200"></line-ui> -->
-   
-    <!-- <connection-ui top1="100" left1="100" top2="300" left2="150"></connection-ui> -->
 
     <div id="connections"></div>
     <div class="entity-state">
         <div class="state-header">
-            <button class="close-btn" onclick="closeState()" aria-label="Close"></button>
+            <button class="close-btn" id="closeWindow" aria-label="Close"></button>
         </div>
         <div class="tabs">
             <div class="tab-buttons">
-                <button class="tab-btn active" data-tab="Info">Info</button>
-                <button class="tab-btn" data-tab="Logs">Logs</button>
+                <button id="infoTab" class="tab-btn active" data-tab="Info">Info</button>
+                <button id="logsTab" class="tab-btn" data-tab="Logs">Logs</button>
             </div>
 
-            <div class="tab-content active" id="info">
-                <h2>Home</h2>
-                <p>Welcome to home tab.</p>
-            </div>
-
-            <div class="tab-content" id="logs">
-                <h2>Profile</h2>
-                <p>This is profile section.</p>
-            </div>
+            <pre class="tab-content active" id="info"></pre>
+            <pre class="tab-content" id="logs"></pre>
 
         </div>
     </div>
+    <textarea id="request" class="input-area"></textarea>
     
-    <script src="connection.js"></script>
     <script type="module" src="script.js"></script>
     <script type="module" src="core/controller.js"></script>
     <script type="module" src="core/agent.js"></script>
@@ -48,6 +38,9 @@
     <script type="module" src="core/model.js"></script>
     <script type="module" src="core/presentation.js"></script>
     <script type="module" src="core/team.js"></script>
-    <script src="modules.js"></script>
+    <script type="module" src="ui/line/script.js"></script>
+    <script type="module" src="agent/script.js"></script>
+    <script type="module" src="ui/arrow/script.js"></script>
+    <script type="module" src="ui/connection/script.js"></script>
 </body>
 </html>

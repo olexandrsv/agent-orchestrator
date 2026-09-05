@@ -1,16 +1,17 @@
-class AgentUI extends HTMLElement {
-    connectedCallback(){
-        this.left = this.getAttribute("left")
-        this.top = this.getAttribute("top")
-        this.color = this.getAttribute("color")
+export class AgentUI {
+    constructor(left, top, color, onclick){
+        let div = document.createElement("div")
+        let colorRgbCode = "228, 40, 33"
+        if (color === "blue"){
+            colorRgbCode = "33, 121, 228"
+        }
 
-        this.style.left = `${this.left}px`
-        this.style.top = `${this.top}px`
-    }
+        div.className = "agent-ui"
+        div.style.setProperty("--left", Number(left)+"px")
+        div.style.setProperty("--top", Number(top)+"px")
+        div.style.setProperty("--color", colorRgbCode)
 
-    onClick(){
-        document.getElementsByClassName("entity-state")[0].classList.add("active");
+        div.onclick = onclick
+        document.getElementById("agents").appendChild(div)
     }
 }
-
-customElements.define("my-agent", AgentUI)
